@@ -23,6 +23,11 @@ int buscaBinaria(int lista[], int valorDeBusca, int tamanhoDoVetor) {
     return -1;
 }
 
+// ### Encontrando o pior caso de uma busca
+
+// - log de N na base 2 (log2N)
+// - Significa: quantas vezes você pode dividir 𝑁 por 2 até chegar a 1?
+
 
 int main(int argc, char *argv[]) {
 	
