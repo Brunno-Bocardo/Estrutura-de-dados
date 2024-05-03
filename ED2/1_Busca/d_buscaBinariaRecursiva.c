@@ -15,11 +15,7 @@ int buscaBinariaRecursiva(int lista[], int valorDeBusca, int inferior, int super
         return buscaBinariaRecursiva(lista, valorDeBusca, meio + 1, superior);
 
     if (valorDeBusca < lista[meio])
-<<<<<<< HEAD
         return buscaBinariaRecursiva(lista, valorDeBusca, inferior, meio);
-=======
-        return buscaBinariaRecursiva(lista, valorDeBusca, inferior, meio + 1);
->>>>>>> e1d6ae46d22849f4900d362e40d918041223fb7c
         
     // É passado "meio + 1", pois é desnecessário passar o meio na próxima sequencia de busca 
     // já que ele teve sua ilustre participação nesse escopo
