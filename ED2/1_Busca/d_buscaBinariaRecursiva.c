@@ -1,7 +1,7 @@
 #include <stdio.h>
 
 int buscaBinariaRecursiva(int lista[], int valorDeBusca, int inferior, int superior) {
-    if (inferior <= superior) {
+    if (superior <= inferior) {
         // verifica se ainda existem itens de busca 
         return -1; 
     }
