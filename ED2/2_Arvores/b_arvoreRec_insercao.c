@@ -21,20 +21,6 @@ tNo* criarNo(int info){
 }
 
 
-tNo* inserirDireita(tNo *noPai, int info){
-    tNo* no = criarNo(info);
-    noPai->direita = no;
-    return no;
-}
-
-
-tNo* inserirEsquerda(tNo *noPai, int info){
-    tNo* no = criarNo(info);
-    noPai->esquerda = no;
-    return no;
-}
-
-
 tNo* subArvore(tNo *noPai, int info) {
     if (!noPai)
         return criarNo(info); 
