@@ -1,7 +1,7 @@
 #include <stdio.h>
 
 int buscaBinariaRecursiva(int lista[], int valorDeBusca, int inferior, int superior) {
-    if (superior <= inferior) {
+    if (superior < inferior) {
         // verifica se ainda existem itens de busca 
         return -1; 
     }
@@ -15,7 +15,7 @@ int buscaBinariaRecursiva(int lista[], int valorDeBusca, int inferior, int super
         return buscaBinariaRecursiva(lista, valorDeBusca, meio + 1, superior);
 
     if (valorDeBusca < lista[meio])
-        return buscaBinariaRecursiva(lista, valorDeBusca, inferior, meio);
+        return buscaBinariaRecursiva(lista, valorDeBusca, inferior, meio - 1);
         
     // É passado "meio + 1", pois é desnecessário passar o meio na próxima sequencia de busca 
     // já que ele teve sua ilustre participação nesse escopo
