@@ -1,3 +1,18 @@
+// INFO :
+// A complexidade de algoritmo do bubble sort é O(n^2)
+
+// Otimizamos esse algoritmo com:
+// - parando as comparações assim que não houver trocas (n-1 pra um vetor n, pelo menos)
+// - não indo até o fim, já que o vetor vai sendo ordenado pelo fim
+
+// CARACTERÍSTICAS:
+// - simples e estável
+// - menos eficiente
+// - indicado para estruturas sequencias pequenas
+// - exige pouco da memória
+// o objetivo é comparar v[i] com v[i+1], garantindo que v[i] é menor que v[i + 1]
+
+
 #include <stdio.h>
 
 void passagem(int n, int *v, int tamanhoVetor)
