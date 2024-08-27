@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <math.h>
 
 #define MAX_TAMANHO 1000
 
@@ -21,26 +22,46 @@ void construirArvoreSegmentos(int vetor[], int no, int inicio, int fim)
     arvoreSegmentos[no] = arvoreSegmentos[2 * no] + arvoreSegmentos[2 * no + 1];
 }
 
-// Função para consultar a árvore de segmentos
-int consultarArvore(int no, int inicio, int fim, int intervaloInicio, int intervaloFim) {
-    // Se o intervalo consultado está fora do intervalo do nó
-    if (intervaloFim < inicio || fim < intervaloInicio) {
-        return 0;
+
+// Função para deletar uma folha e ajustar a árvore
+void deletarFolha(int no, int inicio, int fim, int indice, int valor) 
+{
+    if (inicio == fim) {  // Caso base: nó folha
+        arvoreSegmentos[no] = 0;  // Remove a folha
+        return;
     }
-    // Se o intervalo do nó está completamente dentro do intervalo consultado
-    if (intervaloInicio <= inicio && fim <= intervaloFim) {
-        return arvoreSegmentos[no];
-    }
+
     int meio = (inicio + fim) / 2;
-    // Consultar os dois filhos do nó
-    return consultarArvore(2 * no, inicio, meio, intervaloInicio, intervaloFim)
-           + consultarArvore(2 * no + 1, meio + 1, fim, intervaloInicio, intervaloFim);
+    
+    if (indice <= meio) {  // Se o índice está no intervalo do filho esquerdo
+        deletarFolha(2 * no, inicio, meio, indice, valor);
+    } else {  // Se o índice está no intervalo do filho direito
+        deletarFolha(2 * no + 1, meio + 1, fim, indice, valor);
+    }
+
+    // Subtrai o valor removido ao subir na árvore
+    arvoreSegmentos[no] -= valor;
+
+    // Se após a subtração, o nó se torna igual a um dos filhos e o outro filho é 0,
+    // o nó atual é transformado na nova folha.
+    if (arvoreSegmentos[2 * no] == 0 && arvoreSegmentos[2 * no + 1] != 0) {
+        arvoreSegmentos[no] = arvoreSegmentos[2 * no + 1];
+        arvoreSegmentos[2 * no + 1] = 0; // Zera o nó filho que foi promovido
+    } else if (arvoreSegmentos[2 * no + 1] == 0 && arvoreSegmentos[2 * no] != 0) {
+        arvoreSegmentos[no] = arvoreSegmentos[2 * no];
+        arvoreSegmentos[2 * no] = 0; // Zera o nó filho que foi promovido
+    }
 }
 
-// Função para atualizar a árvore de segmentos
-void atualizarArvore(int no, int inicio, int fim, int indice, int valor) {
+
+void atualizarArvore(int no, int inicio, int fim, int indice, int valor) 
+{
     // Se o nó é uma folha
     if (inicio == fim) {
+        if (arvoreSegmentos[no] == 0) {
+            printf("Valor no índice %d não existe mais.\n", indice);
+            return;
+        }
         arvoreSegmentos[no] = valor;
         return;
     }
@@ -56,6 +77,45 @@ void atualizarArvore(int no, int inicio, int fim, int indice, int valor) {
 }
 
 
+// Função para imprimir a árvore de segmentos em formato de árvore binária
+void imprimirArvoreBinaria(int altura) 
+{
+    int espaco = (int)pow(2, altura) - 1; // Espaço máximo de largura
+    int nivelAtual = 1;
+    int indice = 1;
+    
+    // NOTA: pow(base, expoente)  |  é usado para calcular expoentes
+
+    while (nivelAtual <= altura) {
+        int nosPorNivel = (int)pow(2, nivelAtual - 1);
+        int espacoEntreNos = espaco / nosPorNivel;
+
+        // Espaçamento inicial para alinhar o primeiro nó
+        for (int i = 0; i < espacoEntreNos / 2; i++) {
+            printf("   ");
+        }
+
+        // Imprime todos os nós do nível atual
+        for (int i = 0; i < nosPorNivel; i++) {
+            if (indice < MAX_TAMANHO && arvoreSegmentos[indice] != 0) {
+                printf("%3d", arvoreSegmentos[indice]);
+            } else {
+                printf("   ");
+            }
+            indice++;
+
+            // Espaçamento entre os nós
+            for (int j = 0; j < espacoEntreNos; j++) {
+                printf("   ");
+            }
+        }
+
+        printf("\n\n");
+        nivelAtual++;
+    }
+}
+
+
 // Código principal
 int main() {
     int vetor[] = { 1, 3, 5, 7, 9, 11 };
@@ -64,14 +124,27 @@ int main() {
     // Construir a árvore de segmentos
     construirArvoreSegmentos(vetor, 1, 0, tamanhoVetor - 1);
     
-    // Consultar a soma dos elementos no intervalo [1, 3]
-    printf("Soma dos elementos no intervalo [1, 3] é %d\n", consultarArvore(1, 0, tamanhoVetor - 1, 1, 3));
+    // Calcular a altura da árvore de segmentos
+    int altura = (int)ceil(log2(tamanhoVetor)) + 1;
+    
+    // Imprimir a árvore de segmentos em formato de árvore binária
+    imprimirArvoreBinaria(altura);
+    
+    // Deletar a folha de valor 2
+    deletarFolha(1, 0, tamanhoVetor - 1, 1, 3);
+    
+    printf("\nApos remocao:\n\n");
+    
+    // Imprimir a árvore de segmentos em formato de árvore binária
+    imprimirArvoreBinaria(altura);
+    
+    printf("\nApos update:\n\n");
     
     // Atualizar o valor no índice 2 para 10
-    atualizarArvore(1, 0, tamanhoVetor - 1, 2, 10);
+    atualizarArvore(1, 0, tamanhoVetor - 1, 4, 4);
     
-    // Consultar a soma dos elementos no intervalo [1, 3] após a atualização
-    printf("Soma dos elementos no intervalo [1, 3] após a atualização é %d\n", consultarArvore(1, 0, tamanhoVetor - 1, 1, 3));
+    // Imprimir a árvore de segmentos em formato de árvore binária
+    imprimirArvoreBinaria(altura);
     
     return 0;
 }
